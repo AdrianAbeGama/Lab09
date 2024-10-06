@@ -28,25 +28,25 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @Composable
-fun ScreenPosts(navController: NavHostController, servicio: PostApiService) {
+fun ScreenPostsList(navController: NavHostController, servicio: PostApiService) {
     var listaPosts: SnapshotStateList<PostModel> = remember { mutableStateListOf() }
     LaunchedEffect(Unit) {
-        val listado = servicio.getUserPosts()
+        val listado = servicio.getPosts()
         listado.forEach { listaPosts.add(it) }
     }
 
-    LazyColumn (
-
-    ){
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
         items(listaPosts) { item ->
             Row(modifier = Modifier.padding(8.dp)) {
                 Text(text = item.id.toString(), Modifier.weight(0.05f), textAlign = TextAlign.End)
-                Spacer(Modifier.padding(horizontal=1.dp))
+                Spacer(Modifier.padding(horizontal = 1.dp))
                 Text(text = item.title, Modifier.weight(0.7f))
                 IconButton(
                     onClick = {
                         navController.navigate("postsVer/${item.id}")
-                        Log.e("POSTS","ID = ${item.id}")
+                        Log.e("POSTS", "ID = ${item.id}")
                     },
                     Modifier.weight(0.1f)
                 ) {
@@ -58,10 +58,10 @@ fun ScreenPosts(navController: NavHostController, servicio: PostApiService) {
 }
 
 @Composable
-fun ScreenPost(navController: NavHostController, servicio: PostApiService, id: Int) {
+fun ScreenPostDetails(navController: NavHostController, servicio: PostApiService, id: Int) {
     var post by remember { mutableStateOf<PostModel?>(null) }
     LaunchedEffect(Unit) {
-        val xpost = servicio.getUserPostById(id)
+        val xpost = servicio.getPostById(id)
         post = xpost.copy()?.takeIf { xpost.body != null }
     }
     Column(
@@ -69,7 +69,7 @@ fun ScreenPost(navController: NavHostController, servicio: PostApiService, id: I
             .padding(8.dp)
             .fillMaxSize()
     ) {
-        if (post != null){
+        if (post != null) {
             OutlinedTextField(
                 value = post!!.id.toString(),
                 onValueChange = {},
