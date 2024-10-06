@@ -31,17 +31,52 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
+fun ProgPrincipal9() {
+    val urlBase = "https://jsonplaceholder.typicode.com/"
+    val retrofit = Retrofit.Builder().baseUrl(urlBase)
+        .addConverterFactory(GsonConverterFactory.create()).build()
+    val servicio = retrofit.create(PostApiService::class.java)
+    val navController = rememberNavController()
+
+    Scaffold(
+        topBar =    { BarraSuperior() },
+        bottomBar = { BarraInferior(navController) },
+        content =   { paddingValues -> Contenido(paddingValues, navController, servicio) }
     )
 }
 
-@Preview(showBackground = true)
+fun BarraSuperior() {
+    CenterAlignedTopAppBar(
+        title = {
+            Text(
+                text = "JSONPlaceHolder Access",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
+    )
+}
+
 @Composable
-fun GreetingPreview() {
-    Lab09Theme {
-        Greeting("Android")
+fun BarraInferior(navController: NavHostController) {
+    NavigationBar(
+        containerColor = Color.LightGray
+    ) {
+        NavigationBarItem(
+            icon = { Icon(Icons.Outlined.Home, contentDescription = "Inicio") },
+            label = { Text("Inicio") },
+            selected = navController.currentDestination?.route == "inicio",
+            onClick = { navController.navigate("inicio") }
+        )
+        NavigationBarItem(
+            icon = { Icon(Icons.Outlined.Favorite, contentDescription = "Posts") },
+            label = { Text("Posts") },
+            selected = navController.currentDestination?.route == "posts",
+            onClick = { navController.navigate("posts") }
+        )
     }
 }
+
