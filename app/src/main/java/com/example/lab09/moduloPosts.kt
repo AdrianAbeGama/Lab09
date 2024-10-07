@@ -27,17 +27,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
+class moduloPosts {
+}
+
 @Composable
-fun ScreenPostsList(navController: NavHostController, servicio: PostApiService) {
+fun ScreenPosts(navController: NavHostController, servicio: PostApiService) {
     var listaPosts: SnapshotStateList<PostModel> = remember { mutableStateListOf() }
     LaunchedEffect(Unit) {
-        val listado = servicio.getPosts()
+        val listado = servicio.getUserPosts()
         listado.forEach { listaPosts.add(it) }
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    LazyColumn {
         items(listaPosts) { item ->
             Row(modifier = Modifier.padding(8.dp)) {
                 Text(text = item.id.toString(), Modifier.weight(0.05f), textAlign = TextAlign.End)
@@ -58,10 +59,10 @@ fun ScreenPostsList(navController: NavHostController, servicio: PostApiService) 
 }
 
 @Composable
-fun ScreenPostDetails(navController: NavHostController, servicio: PostApiService, id: Int) {
+fun ScreenPost(navController: NavHostController, servicio: PostApiService, id: Int) {
     var post by remember { mutableStateOf<PostModel?>(null) }
     LaunchedEffect(Unit) {
-        val xpost = servicio.getPostById(id)
+        val xpost = servicio.getUserPostById(id)
         post = xpost.copy()?.takeIf { xpost.body != null }
     }
     Column(

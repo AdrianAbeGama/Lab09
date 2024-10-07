@@ -1,5 +1,4 @@
 package com.example.lab09
-
 import com.google.gson.annotations.SerializedName
 
 data class PostModel(

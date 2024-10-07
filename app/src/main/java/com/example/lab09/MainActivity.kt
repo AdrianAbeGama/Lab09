@@ -25,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.lab09.ui.theme.Lab09Theme
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -39,7 +41,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ProgPrincipal9()
+            Lab09Theme {
+                ProgPrincipal9()
+            }
         }
     }
 }
@@ -115,9 +119,9 @@ fun Contenido(
 
             composable("posts") { ScreenPosts(navController, servicio) }
             composable("postsVer/{id}", arguments = listOf(
-                navArgument("id") { type = NavType.IntType } )
-            ) { backStackEntry ->
-                ScreenPost(navController, servicio, backStackEntry.arguments!!.getInt("id"))
+                navArgument("id") { type = NavType.IntType }
+            )) {
+                ScreenPost(navController, servicio, it.arguments!!.getInt("id"))
             }
         }
     }
@@ -129,13 +133,17 @@ fun ScreenInicio() {
 }
 
 @Composable
-fun ScreenPosts(navController: NavHostController, servicio: PostApiService) {
-    // Aquí va el contenido de la pantalla de posts
-    Text("Posts")
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
 }
 
+@Preview(showBackground = true)
 @Composable
-fun ScreenPost(navController: NavHostController, servicio: PostApiService, postId: Int) {
-    // Aquí va el contenido de la pantalla de un post específico
-    Text("Post $postId")
+fun GreetingPreview() {
+    Lab09Theme {
+        Greeting("Android")
+    }
 }
